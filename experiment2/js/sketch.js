@@ -13,6 +13,7 @@ const VALUE2 = 2;
 // Globals
 let myInstance;
 let canvasContainer;
+let palette = 1;
 
 class MyClass {
     constructor(param1, param2) {
@@ -24,6 +25,13 @@ class MyClass {
         // code to run when method is called
     }
 }
+// start of code from 
+let table;
+
+function preload() {
+  table = loadTable("colors.csv", "csv", "header");
+}
+//end of code from 
 
 // setup() function is called once when the program starts
 function setup() {
@@ -41,27 +49,44 @@ function setup() {
 
     var centerHorz = windowWidth / 2;
     var centerVert = windowHeight / 2;
+    background(220);
 }
 
 // draw() function is called repeatedly, it's the main animation loop
-function draw() {
-    background(220);    
+function draw(){
     // call a method on the instance
     myInstance.myMethod();
-
-    // Put drawings here
-    var centerHorz = canvasContainer.width() / 2 - 125;
-    var centerVert = canvasContainer.height() / 2 - 125;
-    fill(234, 31, 81);
-    noStroke();
-    rect(centerHorz, centerVert, 250, 250);
-    fill(255);
-    textStyle(BOLD);
-    textSize(140);
-    text("p5*", centerHorz + 10, centerVert + 200);
+    // start of code from 
+    let col = floor(random(5));
+    let r = table.get(palette, col * 3);
+    let g = table.get(palette, col * 3 + 1);
+    let b = table.get(palette, col * 3 + 2);
+    // end of code from 
+    let positionX = random(0,canvasContainer.width());
+    let positionY = random(0,canvasContainer.height());
+    let sides = random(8,15);
+    beginShape();
+    fill(r, g, b);
+    for (let i = 0; i < sides; i += 1){
+        vertex(random(positionX - 30, positionX + 30), random(positionY - 30, positionY + 30));
+    }
+    endShape();
+    // console.log(palette);
 }
 
 // mousePressed() function is called once after every time a mouse button is pressed
 function mousePressed() {
     // code to run when mouse is pressed
+    clear();
+    background(220);
+    palette = floor(random(676));
+    // if (newPal){
+    //     palette = floor(random(676));
+    //     newPal = false;
+    // }
 }
+
+// function generatePal(){
+//     let palette = floor(random(676));
+//     return palette;
+// }
