@@ -1,5 +1,6 @@
 
-.cat-photo {
+.pfp {
   margin: 10px;
-  max-width: 500px;
+  width: 10%;
+  height: 10%;
 }

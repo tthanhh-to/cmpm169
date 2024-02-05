@@ -13,6 +13,17 @@ const VALUE2 = 2;
 // Globals
 let myInstance;
 let canvasContainer;
+// l system generation set up
+let rules = {
+    "F": "F+G+F",
+    "G": "F-G++F-G"
+}
+// l system drawing set up
+let len; 
+let ang = 90;
+let drawRules;
+
+let word = "GFFGF";
 
 class MyClass {
     constructor(param1, param2) {
@@ -41,27 +52,67 @@ function setup() {
 
     var centerHorz = windowWidth / 2;
     var centerVert = windowHeight / 2;
+    background(220);
+    noLoop();
+    drawRules ={
+        "F": () =>{
+            line(0, 0, 0, -len);
+            translate(0, -len);
+        },
+        "G": () =>{
+            line(0, 0, 0, len);
+            translate(0, len);
+        },
+        "-": () =>{
+            rotate(PI/180 * ang);
+        },
+        "+": () =>{
+            rotate(PI/180 * -ang);
+        },
+    }
 }
 
 // draw() function is called repeatedly, it's the main animation loop
 function draw() {
-    background(220);    
     // call a method on the instance
     myInstance.myMethod();
-
     // Put drawings here
-    var centerHorz = canvasContainer.width() / 2 - 125;
-    var centerVert = canvasContainer.height() / 2 - 125;
-    fill(234, 31, 81);
-    noStroke();
-    rect(centerHorz, centerVert, 250, 250);
-    fill(255);
-    textStyle(BOLD);
-    textSize(140);
-    text("p5*", centerHorz + 10, centerVert + 200);
+    //len = 1
+    len = random(5,20);
+    colorMode(HSB);
+    stroke(random(183,228), random(15,55),random(55,80));
+    push();
+    translate(mouseX, mouseY);
+    rotate(PI/180 * ang);
+    for(let i = 0; i < word.length; i++){
+        let c = word[i];
+        if(c in drawRules){
+            drawRules[c]();
+        }
+    }
+    pop();
 }
 
 // mousePressed() function is called once after every time a mouse button is pressed
 function mousePressed() {
     // code to run when mouse is pressed
+    word = generate();
+    draw();
+    console.log(word);
+}
+
+function generate(){
+    let next = "";
+    for(let i = 0; i < word.length; i++){
+        let c = word[i];
+        if (c in rules){
+            next += rules[c];
+        }
+        else{
+            next += c;
+        }
+    }
+
+
+    return next; 
 }
